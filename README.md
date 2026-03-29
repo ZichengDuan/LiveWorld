@@ -254,7 +254,3 @@ If you find this work helpful, please consider citing:
   year={2026}
 }
 ```
-
-## 📄 License
-
-TBD
