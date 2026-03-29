@@ -67,7 +67,7 @@ from .observer_adapter import ObserverAdapter, ObserverIterationInput
 from .projection_compositor import ProjectionCompositor, overlay_fg_on_scene
 from .world_state import WorldState
 from .event_types import EventObservation, make_event_id, EventVideo
-from scripts.dataset_preparation._geometry import transform_points, project_points
+from scripts.create_train_data._geometry import transform_points, project_points
 
 
 @dataclass

@@ -71,9 +71,9 @@ from ..geometry_utils import (
     _get_visible_points_and_coverage_gpu,
 )
 from ..utils import save_video_h264
-from scripts.dataset_preparation._projection import render_projection as _render_proj
-from scripts.dataset_preparation._entity_detector import Qwen3VLEntityExtractor
-from scripts.dataset_preparation._sam3_segmenter import Sam3VideoSegmenter
+from scripts.create_train_data._projection import render_projection as _render_proj
+from scripts.create_train_data._entity_detector import Qwen3VLEntityExtractor
+from scripts.create_train_data._sam3_segmenter import Sam3VideoSegmenter
 
 
 # =============================================================================

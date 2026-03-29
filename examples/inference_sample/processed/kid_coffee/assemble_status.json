@@ -1,0 +1,17 @@
+{
+  "image_stem": "kid_coffee",
+  "image_path": "examples/inference_sample/raw/kid_coffee.png",
+  "completed": true,
+  "expected_combos": [
+    "case1_left",
+    "case1_right",
+    "case2_left",
+    "case2_right"
+  ],
+  "yaml_count": 4,
+  "generated_yaml_count": 4,
+  "reused_yaml_count": 0,
+  "trajectory_overlay_ready": true,
+  "resume_enabled": true,
+  "updated_at": "2026-03-29T22:14:43.188411"
+}

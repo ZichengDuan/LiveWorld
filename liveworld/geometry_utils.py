@@ -1494,7 +1494,7 @@ def render_projection(
     device: str = "cuda",
 ) -> np.ndarray:
     """Render point cloud projection (GPU-accelerated). Delegates to scripts.dataset_preparation._projection."""
-    from scripts.dataset_preparation._projection import render_projection as _render_proj
+    from scripts.create_train_data._projection import render_projection as _render_proj
     return _render_proj(
         points_world=points_world,
         K=K,

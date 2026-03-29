@@ -1,0 +1,35 @@
+# Auto-generated | combo: case2_right | image: kid_coffee
+geometry_file_name: processed/kid_coffee/trajectory_templates/kid_coffee_case2_right_seed42/geometry.npz
+first_frame_image: processed/kid_coffee/source_image.png
+entities_file: processed/kid_coffee/entities.json
+storyline_file: processed/kid_coffee/storyline.json
+system_config_file: /home/zicheng/Projects/LiveWorld/configs/infer_system_config_14B.yaml
+iter_input:
+  '0':
+    scene_text: The brick wall backdrop remains visible, now viewed from a slightly
+      angled perspective that reveals more of the stall’s right side. The red-and-white
+      striped canopy and colorful pennant banner are still prominent overhead, with
+      the “BOOKS” chalkboard now more centrally framed.
+    fg_text: ''
+  '1':
+    scene_text: The scene is viewed from a low angle, angled to the left, revealing
+      the brick wall behind the stall and the full length of the white-clothed table.
+      The red-and-white striped canopy and colorful pennant banner remain centered
+      above, while the chalkboard signs for “COFFEE” and “BOOKS” are now partially
+      offset to the left side of the frame.
+    fg_text: ''
+  '2':
+    scene_text: The camera now captures the side of the stall, showing the stack of
+      books and the potted flowers more prominently, while the coffee cups are partially
+      obscured by the angle. The red-and-white striped canopy and colorful pennant
+      banner remain visible overhead, framing the scene.
+    fg_text: ''
+  '3':
+    scene_text: The brick wall backdrop remains visible behind the stall, with the
+      red-and-white striped canopy and colorful pennant banner still in frame. The
+      white tablecloth, chalkboard signs for “COFFEE” and “BOOKS,” and the stacked
+      books and coffee cups are now slightly more centered as the viewpoint shifts
+      subtly downward.
+    fg_text: ''
+output:
+  root: outputs_event_bench/kid_coffee/case2_right

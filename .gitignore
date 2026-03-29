@@ -22,5 +22,6 @@ experiments/
 *.safetensors
 *.ply
 *.lmdb
-examples/training_data/processed/*.npz
-examples/training_data
+examples
+examples/
+./examples

@@ -1,0 +1,35 @@
+# Auto-generated | combo: case1_right | image: kid_coffee
+geometry_file_name: processed/kid_coffee/trajectory_templates/kid_coffee_case1_right_seed42/geometry.npz
+first_frame_image: processed/kid_coffee/source_image.png
+entities_file: processed/kid_coffee/entities.json
+storyline_file: processed/kid_coffee/storyline.json
+system_config_file: /home/zicheng/Projects/LiveWorld/configs/infer_system_config_14B.yaml
+iter_input:
+  '0':
+    scene_text: The brick wall backdrop remains visible behind the stall, with the
+      red-and-white striped canopy overhead and colorful pennant flags strung across.
+      The table, covered in white cloth, holds coffee cups, a stack of books, a jar
+      of colored pencils, and a potted plant, all arranged symmetrically beneath the
+      canopy.
+    fg_text: ''
+  '1':
+    scene_text: The view now shows the side of the stall, with the red-and-white striped
+      canopy and colorful pennant banner visible above. The table’s white cloth, chalkboard
+      signs for “COFFEE” and “BOOKS,” and the stacked books and pencils are seen from
+      an angled perspective, with the brick wall forming the backdrop.
+    fg_text: ''
+  '2':
+    scene_text: The brick wall backdrop remains visible behind the stall, with the
+      red-and-white striped canopy overhead now seen from the side. The white tablecloth
+      covers the counter, and the chalkboard signs for "COFFEE" and "BOOKS" are positioned
+      symmetrically beneath the canopy’s edge.
+    fg_text: ''
+  '3':
+    scene_text: The scene now presents a side profile of the stall, with the red-and-white
+      striped canopy overhead and colorful pennant flags visible along the top edge.
+      The white tablecloth covers the counter, displaying the “COFFEE” and “BOOKS”
+      chalkboards, stacks of books, a jar of colored pencils, and potted yellow flowers,
+      all aligned along the length of the stall.
+    fg_text: ''
+output:
+  root: outputs_event_bench/kid_coffee/case1_right

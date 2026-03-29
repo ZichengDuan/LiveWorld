@@ -33,7 +33,7 @@ from stream3r.models.stream3r import STream3R
 from stream3r.models.components.utils.load_fn import load_and_preprocess_images
 from stream3r.models.components.utils.pose_enc import pose_encoding_to_extri_intri
 from stream3r.stream_session import StreamSession
-from scripts.dataset_preparation._sam3_segmenter import Sam3VideoSegmenter
+from scripts.create_train_data._sam3_segmenter import Sam3VideoSegmenter
 
 DEFAULT_CONF_THRESHOLD = 0.10
 MIN_CONF_THRESHOLD = 0.0

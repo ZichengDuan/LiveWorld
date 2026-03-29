@@ -10,8 +10,8 @@ from typing import Iterable, Tuple
 
 import numpy as np
 
-from scripts.dataset_preparation._geometry import transform_points
-from scripts.dataset_preparation._projection import render_projection
+from scripts.create_train_data._geometry import transform_points
+from scripts.create_train_data._projection import render_projection
 from .video_projection import merge_video_foregrounds
 
 from .event_types import EventVideo, EventPointCloud

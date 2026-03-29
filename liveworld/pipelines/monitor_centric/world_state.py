@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-from scripts.dataset_preparation._geometry import transform_points
+from scripts.create_train_data._geometry import transform_points
 from .event_types import EventPointCloud, EventID
 
 

@@ -17,7 +17,7 @@ import torch
 from PIL import Image
 
 from sam3.model_builder import build_sam3_video_predictor
-from scripts.dataset_preparation._video_io import load_video_frames
+from scripts.create_train_data._video_io import load_video_frames
 
 
 _NULL_PROMPT_PHRASES = (

@@ -1,0 +1,15 @@
+{
+  "image_stem": "kid_coffee",
+  "entities": [
+    "person"
+  ],
+  "max_steps": 4,
+  "scene_text": "A brick wall forms the backdrop behind a wooden stall topped with a red-and-white striped canopy and colorful triangular flags. On the white-clothed table, two chalkboard signs labeled \"COFFEE\" and \"BOOKS\" flank stacks of books, a jar of colored pencils, and a potted plant with yellow flowers.",
+  "steps": {
+    "0": "The boy strolls toward the stack of books and gently leans against the table, remaining fully inside the frame.",
+    "1": "The boy walks toward the coffee cups on the left and gently rests his hand on the nearest one, remaining fully inside the frame.",
+    "2": "The boy strolls over to the stack of books on the right and leans slightly against the table, remaining fully inside the frame.",
+    "3": "The boy walks toward the coffee cups on the left and gently rests his hand on the table, remaining fully inside the frame."
+  },
+  "generated_at": "2026-03-29T22:13:26.372215"
+}

@@ -1,8 +1,0 @@
-{
-  "entities": [
-    "person"
-  ],
-  "entity_detect_raw": "1) person\n2) coffee cup\n3) books\n4) pencil\n5) flower pot",
-  "primary_entity": "person",
-  "image_path": "kid_coffee.png"
-}
