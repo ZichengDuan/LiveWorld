@@ -50,8 +50,7 @@ no_save: false
 
 # ============ Model Config ============
 # Use Wan2.1-Fun-14B T2V model
-wan_model_name: ckpts/alibaba-pai--Wan2.1-Fun-1.3B-InP
-# wan_model_name: ckpts/Wan-AI--Wan2.1-T2V-14B
+wan_model_name: ckpts/Wan-AI--Wan2.1-T2V-14B
 
 text_encoder_cpu_offload: false
 
@@ -111,38 +110,22 @@ i2v: false
 
 # ============ State Adapter Config ============
 # Model architecture with State Adapter layers
-# wan_config_dict:
-#   _class_name: "WanModel"
-#   _diffusers_version: "0.36.0.dev0"
-#   dim: 5120
-#   eps: 1e-06
-#   ffn_dim: 13824
-#   freq_dim: 256
-#   in_dim: 16          # 16 (video latent only) for T2V
-#   model_type: "t2v"
-#   num_heads: 40
-#   num_layers: 40
-#   out_dim: 16
-#   text_len: 512
-#   # State Adapter layers - inject at every other layer
-#   sp_layers: [0, 5, 10, 15, 20, 25, 30, 35]
-#   sp_in_dim: 32     # Scene(16) + Foreground(16) projection channels
 wan_config_dict:
   _class_name: "WanModel"
   _diffusers_version: "0.36.0.dev0"
-  dim: 1536
+  dim: 5120
   eps: 1e-06
-  ffn_dim: 8960
+  ffn_dim: 13824
   freq_dim: 256
-  in_dim: 16          # 16 (video latent) + 16 (first frame) + 4 (mask) = 36 for I2V
+  in_dim: 16          # 16 (video latent only) for T2V
   model_type: "t2v"
-  num_heads: 12
-  num_layers: 30
+  num_heads: 40
+  num_layers: 40
   out_dim: 16
   text_len: 512
-  # VACE layers - inject at every other layer
-  sp_layers: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28]
-  sp_in_dim: 32
+  # State Adapter layers - inject at every other layer
+  sp_layers: [0, 5, 10, 15, 20, 25, 30, 35]
+  sp_in_dim: 32     # Scene(16) + Foreground(16) projection channels
 
 # State Adapter model weights path (if starting from pretrained State Adapter)
 # Supports: single file, directory with single safetensors, or directory with sharded safetensors

@@ -1,8 +1,8 @@
 # Auto-generated | combo: traj_f | image: kid_coffee
-geometry_file_name: examples/kid_coffee/trajectory_templates/kid_coffee_traj_f_seed42/geometry.npz
-first_frame_image: examples/kid_coffee/source_image.png
-entities_file: examples/kid_coffee/entities.json
-storyline_file: examples/kid_coffee/storyline.json
+geometry_file_name: examples/inference_sample/kid_coffee/trajectory_templates/kid_coffee_traj_f_seed42/geometry.npz
+first_frame_image: examples/inference_sample/kid_coffee/source_image.png
+entities_file: examples/inference_sample/kid_coffee/entities.json
+storyline_file: examples/inference_sample/kid_coffee/storyline.json
 system_config_file: configs/infer_system_config.yaml
 iter_input:
   '0':

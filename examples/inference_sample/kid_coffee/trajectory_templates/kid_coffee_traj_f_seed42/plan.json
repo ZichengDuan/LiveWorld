@@ -1,7 +1,7 @@
 {
   "sample_id": "kid_coffee_traj_f_seed42",
   "image_path": "kid_coffee.png",
-  "scene_meta_path": "examples/kid_coffee/scene_pointcloud/kid_coffee_stream3r_scene_meta.npz",
+  "scene_meta_path": "examples/inference_sample/kid_coffee/scene_pointcloud/kid_coffee_stream3r_scene_meta.npz",
   "geometry_path": "",
   "combo_id": "traj_f",
   "case_type": "traj_f",

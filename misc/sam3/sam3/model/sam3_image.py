@@ -13,7 +13,7 @@ from sam3.model.sam1_task_predictor import SAM3InteractiveImagePredictor
 from sam3.model.vl_combiner import SAM3VLBackbone
 from sam3.perflib.nms import nms_masks
 
-from sam3.train.data.collator import BatchedDatapoint
+from sam3.model.data_misc import BatchedDatapoint
 
 from .act_ckpt_utils import activation_ckpt_wrapper
 
