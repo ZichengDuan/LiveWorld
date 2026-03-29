@@ -1494,6 +1494,7 @@ def render_projection(
     device: str = "cuda",
 ) -> np.ndarray:
     """Render point cloud projection (GPU-accelerated). Delegates to scripts.dataset_preparation._projection."""
+    from scripts.dataset_preparation._projection import render_projection as _render_proj
     return _render_proj(
         points_world=points_world,
         K=K,
@@ -1506,18 +1507,23 @@ def render_projection(
     )
 
 
-def scale_intrinsics(K: np.ndarray, scale_x: float, scale_y: float) -> np.ndarray:
+def scale_intrinsics(K: np.ndarray, scale_x, scale_y) -> np.ndarray:
     """
     Scale intrinsic matrix for different resolutions.
 
     Args:
         K: [3, 3] intrinsic matrix
-        scale_x: Scale factor for x (width)
-        scale_y: Scale factor for y (height)
+        scale_x: Scale factor for x (width), or source (h, w) tuple
+        scale_y: Scale factor for y (height), or target (h, w) tuple
 
     Returns:
         K_scaled: [3, 3] scaled intrinsic matrix
     """
+    if isinstance(scale_x, tuple) and isinstance(scale_y, tuple):
+        from_h, from_w = scale_x
+        to_h, to_w = scale_y
+        scale_x = to_w / from_w
+        scale_y = to_h / from_h
     K_scaled = K.copy()
     K_scaled[0, 0] *= scale_x  # fx
     K_scaled[1, 1] *= scale_y  # fy

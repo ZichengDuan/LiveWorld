@@ -1478,7 +1478,7 @@ class MonitorCentricEvolutionPipeline:
             fx, fy, cx, cy = flat[:4]
             K_raw = np.array([[fx, 0.0, cx], [0.0, fy, cy], [0.0, 0.0, 1.0]], dtype=np.float32)
 
-        return scale_intrinsics(K_raw, out_w / proc_w, out_h / proc_h)
+        return scale_intrinsics(K_raw, (proc_h, proc_w), (out_h, out_w))
 
     def _event_scene_ref_mask_dilate(self) -> int:
         """Dilation radius (pixels) for foreground removal in event scene refs."""

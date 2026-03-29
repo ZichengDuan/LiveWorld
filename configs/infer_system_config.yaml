@@ -5,19 +5,19 @@ runtime:
     observer: true
 observer:
   config: configs/train_liveworld_14B.yaml
-  backbone_path: ckpts/Wan2.1-T2V-14B-StepDistill/distill_model.pt
+  backbone_path: null
   lora_path: ckpts/lora/model.pt      # Download from HuggingFace
   sp_path: ckpts/state_adapter/model.pt      # Download from HuggingFace
   frames_per_iter: 65
   fps: 16
-  infer_steps: 20
-  guidance_scale: null
-  max_preceding_frames: 1
-  max_reference_frames: 1
+  infer_steps: 50
+  guidance_scale: 7
+  max_preceding_frames: 10
+  max_reference_frames: 10
   ref_discard_black_ratio: 0.1
   no_ref_before_round: 1
   pose_based_ref: true           # true = use 2D coverage to select refs instead of 3D IoU
-  pose_based_ref_count: 7         # number of target poses to sample for coverage-based ref selection
+  pose_based_ref_count: 10         # number of target poses to sample for coverage-based ref selection
   reference_retrieval:
     iou_threshold: 0.95
     voxel_size_iou: 0.02

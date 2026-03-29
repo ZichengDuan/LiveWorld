@@ -1,0 +1,190 @@
+# LiveWorld T2V: Camera-Controlled Video Generation with Scene Point Cloud Conditioning
+# Based on LiveWorld paper - using Wan2.1-Fun-1.3B T2V model with State Adapter
+# No first frame conditioning (pure T2V)
+
+
+# ============ Basic Training Config ============
+generator_fsdp_wrap_strategy: size
+text_encoder_fsdp_wrap_strategy: size
+warp_denoising_step: false
+ts_schedule: false
+num_train_timestep: 1000
+timestep_shift: 5.0
+guidance_scale: 6
+denoising_loss_type: flow
+mixed_precision: bf16
+seed: 42
+
+# ============ Wandb ============
+wandb_host: null
+wandb_key: ""  # Set your WandB API key here or use WANDB_API_KEY env variable
+wandb_entity: ""
+wandb_project: LiveWorldTraining
+wandb_mode: offline  # Set to "online" if using WandB
+
+# ============ FSDP Config ============
+sharding_strategy: hybrid_full
+lr: 1e-5
+
+# ============ Learning Rate Scheduler ============
+lr_scheduler_type: cosine
+lr_warmup_steps: 0
+min_lr_ratio: 0.1
+
+# ============ Batch Size ============
+batch_size: 1
+scale_steps_by_batch_size: true
+
+# ============ Negative Prompt ============
+negative_prompt: '过曝，静态，细节模糊不清，字幕，静止，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走'
+
+# ============ Gradient Checkpointing ============
+gradient_checkpointing: true
+
+# ============ Checkpointing and Visualization ============
+log_iters: 500
+vis_iters: 50000
+ema_start_step: 100000000
+vis_debug: false
+no_save: false
+
+# ============ Model Config ============
+# Use Wan2.1-Fun-14B T2V model
+wan_model_name: ckpts/Wan-AI--Wan2.1-T2V-14B
+
+text_encoder_cpu_offload: false
+
+# Task: Bidirectional video generation
+generator_task: bidirectional_video
+
+# Output directory
+logdir: experiments/liveworld
+
+# Task and Trainer
+task: FMWanLiveWorld
+trainer: trainer_fm_wan
+
+# ============ Video Shape Config ============
+# [batch, frames, channels, height, width]
+# Target: 17 frames (matches 65-frame data)
+# Note: 65 frames -> latent T=17 (VAE stride 4)
+image_or_video_shape:
+- 1
+- 3     # Target frames (T)
+- 16     # Latent channels
+- 60     # Height (720/8)
+- 104    # Width (1280/8)
+
+# Frame grouping for bidirectional training
+num_frame_per_block: 3
+
+# ============ Training Stages (LiveWorld Paper) ============
+training_stages_config_dict:
+  state_adapter:
+    - 8000      # total samples (≈1 epoch for 5k dataset)
+    - 1e-4      # learning rate
+  lora:
+    - 2000      # total samples (≈1 epoch for 5k dataset)
+    - 1e-4      # learning rate
+    
+# ============ LoRA Config ============
+use_lora: true
+lora_config:
+  r: 64                    # Rank 64 as per LiveWorld paper
+  lora_alpha: 64
+  target_modules:
+    - "q"
+    - "k"
+    - "v"
+    - "o"
+  lora_dropout: 0.02
+  bias: "none"
+  task_type: "FEATURE_EXTRACTION"
+
+# ============ Data Config ============
+data_path: examples/training_data/processed_lmdb
+dataset_type: liveworld
+
+# ============ T2V Config (No First Frame) ============
+i2v: false
+
+# ============ State Adapter Config ============
+# Model architecture with State Adapter layers
+wan_config_dict:
+  _class_name: "WanModel"
+  _diffusers_version: "0.36.0.dev0"
+  dim: 5120
+  eps: 1e-06
+  ffn_dim: 13824
+  freq_dim: 256
+  in_dim: 16          # 16 (video latent only) for T2V
+  model_type: "t2v"
+  num_heads: 40
+  num_layers: 40
+  out_dim: 16
+  text_len: 512
+  # State Adapter layers - inject at every other layer
+  sp_layers: [0, 5, 10, 15, 20, 25, 30, 35]
+  sp_in_dim: 32     # Scene(16) + Foreground(16) projection channels
+
+# State Adapter model weights path (if starting from pretrained State Adapter)
+# Supports: single file, directory with single safetensors, or directory with sharded safetensors
+# Pretrained State Adapter and LoRA weights (download from HuggingFace or train from scratch)
+# Set to null to train from scratch without pretrained weights
+sp_model_path: null
+lora_model_path: null
+
+# ============ LiveWorld Specific Config ============
+drop_text_prompt: 0.2
+
+# Foreground conditioning mode probabilities (stage-aware):
+# - fg_text_only: only keep foreground text, zero out fg projection
+# - fg_proj_only: keep fg projection, drop foreground text from prompt
+# - both: keep both foreground text and fg projection
+fg_mode_probs_sp:
+  fg_text_only: 0.0
+  fg_proj_only: 0.8
+  both: 0.2
+
+fg_mode_probs_lora:
+  fg_text_only: 0.2
+  fg_proj_only: 0.6
+  both: 0.2
+
+# ============ Dropout Config (via random sampling in dataset) ============
+# Random sampling implements natural dropout:
+# - Samples 0 to N frames, where 0 = full dropout
+# - Target scene projection is NEVER dropped (core camera control signal)
+MAX_REF_SCENE_FRAMES: 1          # Cap reference scene frames per sample
+ref_sample_strategy: random      # Reference frames: random sample 0..min_ref per batch
+
+# ============ VAE Config ============
+vae_stride:
+- 4
+- 8
+- 8
+
+# ============ Validation Config ============
+# Validation uses training data folders directly
+# System-level inference params are loaded from backbone_inference_defaults.yaml
+backbone_inference_defaults: configs/backbone_inference_defaults.yaml
+
+# --- Validation-specific hyperparameters ---
+VAL_INPUT_BASE_PATH: example_imgs/liveworld_val
+VAL_FILENAME: ""
+VAL_INFER_STEPS: 20
+# T2V mode (i2v: false): NO overlap between iterations
+# VAL_NUM_FRAMES = frames to generate (not counting input first frame)
+#                  Must be divisible by VAL_FRAMES_PER_ITER
+# VAL_FRAMES_PER_ITER = frames per iteration (must be 4N+1, e.g., 65)
+# Final video = first_frame + VAL_NUM_FRAMES = 66 frames
+VAL_NUM_FRAMES: 65          # Frames to generate: 65 = single iteration
+VAL_FRAMES_PER_ITER: 65     # Frames per iteration (4N+1)
+VAL_START_FRAME: 0          # Starting frame index
+VAL_FIRST_NUM_SAMPLES: 1    # Only validate 1 sample on first validation
+
+p1_prob: 0.3  # Probability of using P1 mode (1 preceding frame) vs P9 mode (9 frames)
+use_fg_proj: true
+aug_proj: false
+aug_scene_ref: false
+overlay_fg_on_scene: true

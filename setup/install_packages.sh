@@ -2,6 +2,15 @@
 # Install LiveWorld and all local dependencies
 set -e
 
+echo "Installing ffmpeg..."
+if command -v conda &> /dev/null; then
+    conda install -y ffmpeg
+elif command -v apt-get &> /dev/null; then
+    apt-get update && apt-get install -y ffmpeg
+else
+    echo "WARNING: Could not install ffmpeg. Please install it manually."
+fi
+
 echo "Installing LiveWorld..."
 pip install -e .
 
