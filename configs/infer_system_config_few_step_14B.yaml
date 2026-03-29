@@ -1,0 +1,255 @@
+runtime:
+  device: cuda:0
+  seed: 71
+  cpu_offload:
+    observer: true
+observer:
+  config: configs/train_liveworld_14B.yaml
+  backbone_path: ckpts/Wan2.1-T2V-14B-StepDistill/distill_model.pt  # Distilled backbone
+  lora_path: ckpts/lora_few_step/model.pt      # Few-step distilled LoRA
+  sp_path: ckpts/state_adapter/model.pt         # Same State Adapter as full-step
+  frames_per_iter: 65
+  fps: 16
+  infer_steps: 4                                # 4-step denoising
+  guidance_scale: null                          # CFG-free (distilled)
+  max_preceding_frames: 10
+  max_reference_frames: 10
+  ref_discard_black_ratio: 0.1
+  no_ref_before_round: 1
+  pose_based_ref: true           # true = use 2D coverage to select refs instead of 3D IoU
+  pose_based_ref_count: 10         # number of target poses to sample for coverage-based ref selection
+  reference_retrieval:
+    iou_threshold: 0.95
+    voxel_size_iou: 0.02
+    max_iou_points: 50000
+    iou_device: auto
+event:
+  enabled: true
+  max_events: 2
+  cpu_offload:
+    qwen: true
+    sam3: true
+    dinov3: true
+  detection:
+    min_mask_ratio: 0.001
+    scene_detect_prompt: 'List CATEGORIES to remove, keeping ONLY static solid background.
+
+
+      BACKGROUND (keep): walls, floor, ceiling, furniture, doors, windows, buildings,
+      roads, sidewalks, trees, grass, scenery, fixed structures.
+
+
+      REMOVE (even if stationary):
+
+      - People (including hands/arms/feet)
+
+      - Vehicles (car, truck, bus, motorcycle, bicycle, scooter, wheelchair)
+
+      - Animals
+
+      - Handheld/portable items (bag, phone, cup, food, umbrella)
+
+      - Movable objects (stroller, cart, luggage, carried boxes)
+
+      - Water surfaces (river, lake, ocean, pond, fountain, waterfall, stream, waves,
+      puddle)
+
+      - Other dynamic elements (fire, flame, flags, signs, balloons, etc.)
+
+      - Sky (if visible in the scene, write exactly: sky)
+
+
+      RULES:
+
+      1. Output CATEGORIES, not individual instances
+
+      2. Use AT MOST 4 categories total (merge aggressively)
+
+      3. Pick broad categories that cover the most area
+
+      4. For any human, ALWAYS write exactly: person
+
+      5. For any sky region, ALWAYS write exactly: sky
+
+      6. For any water surface, ALWAYS write exactly: water
+
+      7. Keep items short (1-5 words)
+
+      8. When unsure, LIST IT (over-remove is better than under-remove)
+
+
+      OUTPUT FORMAT:
+
+      Nothing
+
+      OR numbered list (max 5 items):
+
+      1) person
+
+      2) car
+
+      3) sky
+
+
+      EXAMPLES:
+
+      Scene: office with desks, a person typing, coffee cup on desk
+
+      1) person
+
+      2) cup on the table
+
+      ---
+
+      Scene: street with buildings, parked cars, two pedestrians, blue sky above
+
+      1) person
+
+      2) car
+
+      3) sky
+
+      ---
+
+      Scene: riverside park, jogger running, river flowing
+
+      1) person
+
+      2) water
+
+      3) sky
+
+      ---
+
+      Scene: empty room with table and chairs
+
+      Nothing
+
+      ---
+
+      Scene: kitchen, person''s hands visible preparing food
+
+      1) person
+
+      2) cup on the table
+
+      '
+  deduplication:
+    enabled: true
+    model_path: ckpts/facebook--dinov3-vith16plus-pretrain-lvd1689m
+    similarity_threshold: 0.5
+  evolution:
+    system_prompt: "You are a scene evolution agent for one fixed event camera.\n\
+      The current scene contains these dynamic entities: {entities}.\nWrite one concise\
+      \ but vivid image-to-video continuation prompt describing how these entities\
+      \ continue moving naturally and coherently in THIS scene only.\n\nMOTION GUIDELINES:\n\
+      - Entities should INTERACT with objects visible in the scene. Move TOWARD a specific\
+      \ object\n  or landmark (a bench, a table, a rock, a tree, a ball, a flower pot,\
+      \ a doorway, etc.)\n  and interact with it (approach, sit on, lean against, sniff,\
+      \ circle around, settle beside, etc.).\n\
+      - Good examples: a dog walks toward the bench and sits beside it; a person takes up the coffee cup and drink; a man stands up.\
+      \ ; a cat pads toward the rock and settles\
+      \ on it; a child walks\n  toward the swing set.\n\
+      - ONLY gentle, steady motions: walking, strolling, trotting, padding, wandering, taking up.\n\
+      - FORBIDDEN intense motions: running, dashing, jumping, leaping, hopping, sprinting,\n\
+      \  lunging, pouncing, chasing, bolting, galloping. These cause unstable video.\n\
+      - Secondary motions (turning, gesturing, looking around, wagging tail) should accompany\n\
+      \  the larger movement, not replace it.\n\n\
+      CRITICAL CONSTRAINT:\n- ALL entities MUST stay fully inside the frame at ALL\
+      \ times. Never let any entity\n  walk out of frame, move to the edge, or leave\
+      \ the visible area.\n- Entities should move WITHIN the visible scene area, not\
+      \ toward or past its boundaries.\n\nRULES:\n- Keep motion physically plausible\
+      \ — natural walking, strolling pace.\n- Preserve identities.\n- Do\
+      \ not add new objects or new identities.\n- Return only the final prompt text.\n"
+    use_preset_storyline: false
+    use_preceding_scene_proj: true
+    use_preceding_fg_proj: true
+    use_target_scene_proj: true
+    target_scene_proj_frames: null  # e.g. "0,64" to only keep frames 0 and 64; null = all frames
+    sp_context_scale: 0.4
+    max_scene_refs: 1
+  scene_registration:
+    entity_similarity_threshold: 0.45
+  intermediate_detection:
+    enabled: false
+    coverage_threshold: 0.1
+    max_per_round: 1
+    min_visible_duration: 5
+    detect_prompt: 'Look at this frame and list any dynamic entities (people, animals,
+      vehicles, or other objects that can move) that are clearly visible.
+
+      RULES:
+
+      1. Output CATEGORIES, not individual instances
+
+      2. Use AT MOST 3 categories total
+
+      3. For any human, ALWAYS write exactly: person
+
+      4. Keep items short (1-5 words)
+
+      5. Only list entities that are clearly visible and prominent
+
+
+      OUTPUT FORMAT:
+
+      Nothing
+
+      OR numbered list:
+
+      1) person
+
+      2) dog
+
+      '
+  projection:
+    conf_threshold: 0.1
+    rotation_angle: 0.0
+    overlay_fg_on_scene: true
+    overlay_fg_on_scene_event: false
+    fg_mask_erode: 2
+auxiliary:
+  qwen_model_path: ckpts/Qwen--Qwen3-VL-8B-Instruct
+  sam3_model_path: ckpts/facebook--sam3/sam3.pt
+  pointcloud_backend: stream3r
+  stream3r_model_path: ckpts/yslan--STream3R
+  stream3r_window_size: 64
+  # Stream3R incremental update policy:
+  # - complete: fill unseen scene areas, but do not add points where current-pose projection is already covered.
+  # - freeze: do not let later updates alter historical pose projections.
+  stream3r_update_mode: complete
+  scene_voxel_size: null
+output:
+  save_scene_pointcloud: true
+  save_projection_video: true
+  save_event_pointclouds: true
+  save_event_observer_view: true
+  save_final_pointcloud: true
+  save_final_world_event_camera_ply: true
+  camera_ply_pose_stride: 1
+  camera_frustum_depth_scale: 0.02
+  camera_frustum_edge_samples: 8
+  camera_traj_edge_samples: 12
+  observer_camera_frustum_color:
+  - 255
+  - 215
+  - 0
+  observer_camera_center_color:
+  - 0
+  - 255
+  - 255
+  observer_camera_traj_color:
+  - 255
+  - 80
+  - 80
+  event_camera_frustum_depth_scale: 0.02
+  event_camera_frustum_edge_samples: 8
+  event_camera_frustum_color:
+  - 110
+  - 255
+  - 110
+  event_camera_center_color:
+  - 0
+  - 180
+  - 0
+  save_combined_video: true
