@@ -1,8 +1,0 @@
-{
-  "entities": [
-    "person"
-  ],
-  "entity_detect_raw": "1) person\n2) coffee cup on the table\n3) books on the table\n4) flower pot on the table",
-  "primary_entity": "person",
-  "image_path": "examples/inference_sample/raw/kid_coffee.png"
-}
