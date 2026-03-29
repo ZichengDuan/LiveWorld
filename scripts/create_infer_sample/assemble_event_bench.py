@@ -602,7 +602,6 @@ def _write_combo_yaml(
     image_rel: str,
     entities_rel: str,
     storyline_rel: str,
-    system_config_rel: str,
     iter_input: Dict[str, Dict[str, str]],
     inference_output_root: str,
     image_stem: str,
@@ -618,7 +617,6 @@ def _write_combo_yaml(
         "first_frame_image": image_rel,
         "entities_file": entities_rel,
         "storyline_file": storyline_rel,
-        "system_config_file": system_config_rel,
         "iter_input": quoted_iter_input,
         "output": {"root": f"{inference_output_root}/{image_stem}/{combo_id}"},
     }
@@ -1043,7 +1041,6 @@ def main() -> None:
     )
 
     output_root.mkdir(parents=True, exist_ok=True)
-    system_config_ref = str(system_config_path)
 
     scene_builder = None
     if args.scene_estimator == "stream3r":
@@ -1371,7 +1368,6 @@ def main() -> None:
                     image_rel=image_rel,
                     entities_rel=entities_rel,
                     storyline_rel=storyline_rel,
-                    system_config_rel=system_config_ref,
                     iter_input=iter_input,
                     inference_output_root=args.inference_output_root,
                     image_stem=image_stem,

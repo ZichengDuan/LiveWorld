@@ -26,10 +26,11 @@ from liveworld.pipelines.monitor_centric.shared_models import create_shared_mode
 from liveworld.utils import set_seed
 
 
-def _prepare_config(config_path: str, output_root: str, device: str | None) -> dict:
+def _prepare_config(config_path: str, output_root: str, device: str | None, system_config: str | None = None) -> dict:
     """Load config, set output dir and optional device override."""
     config_path = os.path.abspath(config_path)
-    config = load_monitor_centric_config(config_path)
+    system_config_abs = os.path.abspath(system_config) if system_config else None
+    config = load_monitor_centric_config(config_path, system_config_path=system_config_abs)
 
     combo_id = os.path.splitext(os.path.basename(config_path))[0]
     image_stem = os.path.basename(os.path.dirname(os.path.dirname(config_path)))
@@ -65,7 +66,7 @@ def _run_single(config: dict) -> None:
     pipeline.run(iter_inputs)
 
 
-def _run_batch(config_paths: list[str], output_root: str, device: str | None, entity_names_str: str | None = None) -> None:
+def _run_batch(config_paths: list[str], output_root: str, device: str | None, entity_names_str: str | None = None, system_config: str | None = None) -> None:
     """Load all models once, then run each config with a fresh pipeline."""
     if not config_paths:
         print("[batch] No configs to run")
@@ -75,7 +76,7 @@ def _run_batch(config_paths: list[str], output_root: str, device: str | None, en
     done = 0
 
     # Load all heavyweight models once from the first config.
-    first_config = _prepare_config(config_paths[0], output_root, device)
+    first_config = _prepare_config(config_paths[0], output_root, device, system_config)
     _inject_entity_names(first_config, entity_names_str)
     print("[batch] Loading shared models...")
     shared = create_shared_models(first_config)
@@ -114,6 +115,7 @@ def main() -> None:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--config", help="Path to a single event-centric YAML config")
     group.add_argument("--configs-list", help="Path to file listing config paths (one per line)")
+    parser.add_argument("--system-config", required=True, help="Path to system config YAML (model weights, runtime settings)")
     parser.add_argument("--output-root", required=True, help="Output directory for inference results")
     parser.add_argument("--device", default=None, help="Override device, e.g. cuda:0")
     parser.add_argument("--entity-names", default=None, help="Comma-separated entity names to always detect, e.g. 'person,dog'")
@@ -125,10 +127,10 @@ def main() -> None:
         with open(configs_list_path, "r") as f:
             config_paths = [line.strip() for line in f if line.strip()]
         configs_list_path.unlink(missing_ok=True)
-        _run_batch(config_paths, args.output_root, args.device, args.entity_names)
+        _run_batch(config_paths, args.output_root, args.device, args.entity_names, args.system_config)
     else:
         # Single config mode.
-        config = _prepare_config(args.config, args.output_root, args.device)
+        config = _prepare_config(args.config, args.output_root, args.device, args.system_config)
         _inject_entity_names(config, args.entity_names)
         _run_single(config)
 

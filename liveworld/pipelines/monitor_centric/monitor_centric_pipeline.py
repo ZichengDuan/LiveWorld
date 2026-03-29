@@ -4142,16 +4142,17 @@ def _resolve_data_path(value: str, config_dir: Path) -> str:
 _DATA_PATH_KEYS = ("geometry_file_name", "first_frame_image", "entities_file", "storyline_file")
 
 
-def load_monitor_centric_config(config_path: str) -> Dict:
+def load_monitor_centric_config(config_path: str, system_config_path: str = None) -> Dict:
     """Load YAML config with system defaults merging and path resolution.
 
-    Loading order (later overrides earlier):
-    1. Sample config MUST define ``system_config_file``.
-    2. Load that file as defaults.
-    3. Load sample config specified by *config_path* (sample-specific overrides).
+    Args:
+        config_path: Path to sample config YAML.
+        system_config_path: Path to system config YAML. If None, reads
+            ``system_config_file`` from the sample config (backward compat).
 
-    After merging, relative data paths (geometry, image, storyline, etc.) are
-    resolved by searching from the config file's directory upward.
+    Loading order (later overrides earlier):
+    1. Load system config as defaults.
+    2. Load sample config (sample-specific overrides) on top.
     """
     config_path = Path(config_path).resolve()
     if not config_path.exists():
@@ -4159,26 +4160,28 @@ def load_monitor_centric_config(config_path: str) -> Dict:
 
     config_dir = config_path.parent
 
-    # 1. Load sample config first so we can check explicit system_config_file.
+    # 1. Determine system config path.
     sample_cfg = OmegaConf.load(config_path)
     sample_cfg_dict = OmegaConf.to_container(sample_cfg, resolve=True)
-    explicit_system_cfg = sample_cfg_dict.get("system_config_file")
-    if not explicit_system_cfg:
-        raise KeyError(
-            "system_config_file must be provided in sample config "
-            f"(missing in: {config_path})"
-        )
 
-    # 2. Load system defaults.
-    resolved_system_cfg_path = _resolve_data_path(str(explicit_system_cfg), config_dir)
+    if system_config_path is None:
+        # Backward compat: read from sample config (deprecated)
+        system_config_path = sample_cfg_dict.get("system_config_file")
+        if not system_config_path:
+            raise KeyError(
+                "system_config_path not provided. Pass --system-config to "
+                f"scripts/infer.py. Sample config: {config_path}"
+            )
+
+    resolved_system_cfg_path = _resolve_data_path(str(system_config_path), config_dir)
     if not os.path.exists(resolved_system_cfg_path):
         raise FileNotFoundError(
-            f"system_config_file not found: {explicit_system_cfg} "
+            f"system_config not found: {system_config_path} "
             f"(resolved to: {resolved_system_cfg_path})"
         )
     system_cfg = OmegaConf.load(resolved_system_cfg_path)
 
-    # 3. Merge: sample on top of system defaults.
+    # 2. Merge: sample on top of system defaults.
     merged = OmegaConf.merge(system_cfg, sample_cfg)
     config = OmegaConf.to_container(merged, resolve=True)
     config["system_config_file"] = resolved_system_cfg_path
