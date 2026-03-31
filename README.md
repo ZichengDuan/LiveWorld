@@ -86,6 +86,7 @@ This script will:
 - Install Python dependencies from `setup/requirements.txt`
 - Install LiveWorld and local packages (SAM3, Stream3R)
 - Download all pretrained weights (~100GB) into `ckpts/`
+- Download example data into `examples/`
 
 <details>
 <summary>📦 Downloaded model weights</summary>
@@ -210,7 +211,7 @@ LiveWorld/
 │   │   ├── step4a_pack_lmdb.py         # LMDB packing
 │   │   └── step4b_cache_keys.py        # Key caching
 │   └── dataset_preparation/        # Legacy data preparation
-├── examples/
+├── examples/                       # Sample data
 │   ├── inference_sample/           # Inference example
 │   │   ├── raw/                        # Source images (input)
 │   │   └── processed/                  # Generated configs + point clouds (output)
@@ -241,11 +242,7 @@ iter_input:
 The `fg_text` describes the foreground entity you want to appear and its behavior. You can edit this in any generated config under `examples/inference_sample/processed/<image>/infer_scripts/*.yaml`.
 
 </details>
-│   ├── sam3/                   # SAM3 (local package)
-│   └── STream3R/               # Stream3R (local package)
-├── ckpts/                      # Model weights (download separately)
-└── examples/                   # Example data
-```
+
 
 ## 🙏 Acknowledgements
 

@@ -82,29 +82,29 @@ launch_per_gpu() {
 # Step 1: Extract clips + detect entities + segment + estimate geometry + build samples
 # ============================================================================
 echo ">>> Step 1/4: Pipeline (clips + entities + geometry + samples)"
-launch_per_gpu scripts.dataset_preparation.step1_build_samples
+launch_per_gpu scripts.create_train_data.step1_build_samples
 
 # ============================================================================
 # Step 2: Generate video captions
 # ============================================================================
 echo ""
 echo ">>> Step 2/4: Video captioning"
-launch_per_gpu scripts.dataset_preparation.step2_captioning
+launch_per_gpu scripts.create_train_data.step2_captioning
 
 # ============================================================================
 # Step 3: VAE-encode videos to latents
 # ============================================================================
 echo ""
 echo ">>> Step 3/4: VAE encode"
-launch_per_gpu scripts.dataset_preparation.step3_vae_encode
+launch_per_gpu scripts.create_train_data.step3_vae_encode
 
 # ============================================================================
 # Step 4: Pack into sharded LMDB + cache keys
 # ============================================================================
 echo ""
 echo ">>> Step 4/4: Build LMDB"
-python -m scripts.dataset_preparation.step4a_pack_lmdb
-python -m scripts.dataset_preparation.step4b_cache_keys
+python -m scripts.create_train_data.step4a_pack_lmdb
+python -m scripts.create_train_data.step4b_cache_keys
 
 echo ""
 echo "All steps completed on $HOSTNAME."

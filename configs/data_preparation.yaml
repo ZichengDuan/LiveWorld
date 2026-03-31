@@ -5,11 +5,11 @@
 
 # === Input/Output Paths ===
 video_dirs:
-  - examples/training_data/raw/MIRA
-  - examples/training_data/raw/RealEstate10K
-  - examples/training_data/raw/SpatiaVID_HQ
+  - examples/training_sample/raw/MIRA
+  - examples/training_sample/raw/RealEstate10K
+  - examples/training_sample/raw/SpatiaVID_HQ
 video_dirs_ratio: [1, 1]
-output_root: examples/training_data/processed
+output_root: examples/training_sample/processed
 
 # === Clip Extraction ===
 clip_num_frames: 121

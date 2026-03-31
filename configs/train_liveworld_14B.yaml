@@ -102,7 +102,7 @@ lora_config:
   task_type: "FEATURE_EXTRACTION"
 
 # ============ Data Config ============
-data_path: examples/training_data/processed_lmdb
+data_path: examples/training_sample/processed_lmdb
 dataset_type: liveworld
 
 # ============ T2V Config (No First Frame) ============
