@@ -27,7 +27,7 @@
 
 <div>
     <a href='https://zichengduan.github.io/LiveWorld' target='_blank'><img src="https://img.shields.io/badge/Project-Page-blue"></a>
-    <a href='https://arxiv.org/abs/xxxx.xxxxx' target='_blank'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
+    <a href='https://arxiv.org/abs/2603.07145' target='_blank'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>
     <a href='https://huggingface.co/ZichengD/LiveWorld' target='_blank'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Model-yellow'></a>
 </div>
 
@@ -149,6 +149,8 @@ LiveWorld/
 
 We thank the authors of [Wan2.1](https://github.com/Wan-Video/Wan2.1), [SAM3](https://github.com/facebookresearch/sam3), [STream3R](https://github.com/NIRVANALAN/STream3R), [Qwen3-VL](https://github.com/QwenLM/Qwen3-VL), and [DINOv3](https://github.com/facebookresearch/dinov2) for their outstanding open-source contributions.
 
+We also acknowledge that the concept of reasoning about out-of-sight world shares a similar spirit with Out of Sight, Not Out of Mind (Plizzari et al., 3DV 2025) [[paper](https://arxiv.org/abs/2404.05072), [code](https://github.com/Chiaraplizz/OSNOM)], which explored spatial cognition of off-screen objects in egocentric video perception — a totally different domain but a kindred high-level insight.
+
 ## 📝 Citation
 
 If you find this work helpful, please consider citing:
@@ -161,7 +163,3 @@ If you find this work helpful, please consider citing:
   year={2026}
 }
 ```
-
-## 📄 License
-
-TBD
