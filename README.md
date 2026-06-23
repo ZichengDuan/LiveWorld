@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>🌏 LiveWorld: Simulating Out-of-Sight Dynamics in Generative Video World Models</h1>
+<h1>LiveWorld: Simulating Out-of-Sight Dynamics in Generative Video World Models</h1>
 
 <div>
     <a href='https://zichengduan.github.io' target='_blank'>Zicheng Duan<sup>1*</sup></a>&emsp;
