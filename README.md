@@ -45,9 +45,11 @@
 - [x] Training data preparation pipeline
 - [x] Inference sample preparation pipeline
 - [x] Demo data and examples (inference + training)
-- [ ] LiveBench and its inference scripts
-- [ ] Model trained on 1.3B backbone
-- [ ] Model (14B/1.3B) with better training
+- [ ] Model (14B) with better training (Stable Video Infinity)
+- [ ] LiveBench
+
+The Wan2.1-1.3B model constantly produces unsatisfactory videos, so we finally abandoned it.
+
 
 ## 🔧 Installation
 
